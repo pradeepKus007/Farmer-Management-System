@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Registration</title>
+</head>
+<body>
+    <h2>User Registration</h2>
+    <form action="/signup" method="post">
+        <table>
+            <tr>
+                <td>Name:</td>
+                <td><input type="text" name="name" required></td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td><input type="email" name="email" required></td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td><input type="password" name="password" required></td>
+            </tr>
+            <tr>
+                <td>User Role:</td>
+                <td>
+                    <input type="radio" name="role" value="customer" required> Customer
+                    <input type="radio" name="role" value="farmer" required> Farmer
+                </td>
+            </tr>
+            <tr>
+                <td>Shipping Address (For Customers):</td>
+                <td><input type="text" name="shipping_address"></td>
+            </tr>
+            <tr>
+                <td>Billing Address (For Customers):</td>
+                <td><input type="text" name="billing_address"></td>
+            </tr>
+            <tr>
+                <td>Farm Name (For Farmers):</td>
+                <td><input type="text" name="farm_name"></td>
+            </tr>
+            <tr>
+                <td>Address (For Farmers):</td>
+                <td><input type="text" name="address"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="submit" value="Sign Up"></td>
+            </tr>
+        </table>
+    </form>
+    <p>Already have an account? <a href="/login">Login</a></p> <!-- Add a link to the login page -->
+</body>
+</html>

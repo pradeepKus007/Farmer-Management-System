@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Product</title>
+</head>
+<body>
+    <h1>Edit Product</h1>
+    <form method="POST">
+        <label for="name">Product Name:</label>
+        <input type="text" name="new_name" value="{{ product[2] }}" required><br>
+
+        <label for="description">Product Description:</label>
+        <input type="text" name="new_description" value="{{ product[3] }}" required><br>
+
+        <label for="price">Product Price:</label>
+        <input type="text" name="new_price" value="{{ product[4] }}" required><br>
+
+        <input type="submit" value="Save Changes">
+    </form>
+    <p><a href="{{ url_for('products') }}">Go Back</a></p>
+</body>
+</html>

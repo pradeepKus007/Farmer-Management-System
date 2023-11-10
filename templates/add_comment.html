@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Comment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        h2 {
+            color: #007bff;
+        }
+
+        h4 {
+            color: #555;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #fff;
+        }
+
+        li strong {
+            font-weight: bold;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        textarea {
+            width: 100%;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Comment Section</h1>
+    <h2>Product Name: {{ pro_name }}</h2>
+    <h4>Previous Comments:</h4>
+    <ul>
+        {% for comment in all_com %}
+        <li><strong>{{ comment[1] }}:</strong> {{ comment[2] }}</li>
+        {% endfor %}
+    </ul>
+    <form method="POST" action="/add_comment/{{ product_id }}">
+        <label for="comment">Add a Comment:</label>
+        <textarea name="comment" rows="4" cols="50" required></textarea>
+        <input type="submit" value="Submit">
+    </form>
+    <p><a href="{{ url_for('products') }}">Go Back</a></p>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Your Order</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f0f0f0;
+                text-align: center;
+            }
+    
+            h2 {
+                color: #333;
+            }
+    
+            table {
+                width: 80%;
+                margin: 0 auto;
+                border-collapse: collapse;
+            }
+    
+            th, td {
+                border: 1px solid #ddd;
+                padding: 10px;
+                text-align: left;
+            }
+    
+            th {
+                background-color: #007bff;
+                color: #fff;
+            }
+    
+            .checkout-button {
+                background-color: #007bff;
+                color: #fff;
+                padding: 10px 20px;
+                text-decoration: none;
+            }
+        </style>
+    </head>
+<body>
+    <h1>Transaction Report</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>User Name</th>
+                <th>Transaction ID</th>
+                <th>Shipping Address</th>
+                <th>Farm Name</th>
+                <th>Product Name</th>
+                <th>Total Amount</th>
+                <th>Date</th>
+                <th>Quantity</th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results %}
+                <tr>
+                    <td>{{ result[0] }}</td>
+                    <td>{{ result[1] }}</td>
+                    <td>{{ result[2] }}</td>
+                    <td>{{ result[3] }}</td>
+                    <td>{{ result[4] }}</td>
+                    <td>{{ result[5] }}</td>
+                    <td>{{ result[6] }}</td>
+                    <td>{{ result[7] }}</td>
+
+
+
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><a href="{{ url_for('home') }}">Return Home</a></p>
+</body>
+</html>

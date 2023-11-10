@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .checkout-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<h2>Your Order</h2>
+    <table>
+        <tr>
+            <th>Transaction ID</th>
+            <th>Customer ID</th>
+            <th>Product ID</th>
+            <th>Date</th>
+            <th>Total amount</th>
+            
+
+        </tr>
+        {% for transaction_item in transaction_items %}
+            <tr>
+                <td>{{ transaction_item[0] }}</td>
+                <td>{{ transaction_item[1] }}</td>
+                <td>{{ transaction_item[2] }}</td>
+                <td>{{ transaction_item[3] }}</td>
+                <td>{{ transaction_item[4] }}</td>
+
+            </tr>
+        {% endfor %}
+    </table>
+    <p><a href="{{ url_for('home') }}">Return Home</a></p>
+</body>
+</html>
