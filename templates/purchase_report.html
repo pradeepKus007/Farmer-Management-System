@@ -43,6 +43,15 @@
     <table>
         <thead>
             <tr>
+                <tbody>
+                    <form action="{{ url_for('purchase_report') }}" method="GET">
+                        <label for="sort_date">Sort by Date:</label>
+                        <select name="sort_date" id="sort_date">
+                            <option value="asc">Ascending</option>
+                            <option value="desc">Descending</option>
+                        </select>
+                        <button type="submit">Sort</button>
+                    </form>
                 <th>User Name</th>
                 <th>Transaction ID</th>
                 <th>Shipping Address</th>
@@ -55,7 +64,7 @@
 
             </tr>
         </thead>
-        <tbody>
+        
             {% for result in results %}
                 <tr>
                     <td>{{ result[0] }}</td>

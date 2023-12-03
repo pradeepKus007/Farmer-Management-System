@@ -3,6 +3,7 @@ import pymysql
 
 app = Flask(__name__)
 app.secret_key = '12345'
+
 # Database Configuration
 db = pymysql.connect(host='localhost', user='root', password='', database='Market')
 cursor = db.cursor()
@@ -374,11 +375,12 @@ def delete_resource(educational_resource_id):
 
 
    ###################################################################################################################################################################
-
 @app.route('/add_to_cart', methods=['GET'])
 def add_to_cart():
     if 'user_id' in session:
         user_id = session['user_id']
+
+        
         
         # Get the product_id from the query parameters
         product_id = request.args.get('product_id')
@@ -390,18 +392,22 @@ def add_to_cart():
             cursor.execute("SELECT * FROM product WHERE product_id = %s", (product_id,))
             product = cursor.fetchone()
 
+            # Check if the product exists
+            cursor.execute("SELECT * FROM customer WHERE user_id = %s", (user_id,))
+            customer_id = cursor.fetchone()
+
             if product:
                 # Check if the product is already in the cart
-                cursor.execute("SELECT * FROM cart WHERE customer_id = %s AND product_id = %s", (user_id, product_id))
+                cursor.execute("SELECT * FROM cart WHERE customer_id = %s AND product_id = %s", (customer_id[0], product_id))
                 existing_cart_item = cursor.fetchone()
 
                 if existing_cart_item:
                     # If the product is already in the cart, update the quantity
                     new_quantity = existing_cart_item[3] + 1
-                    cursor.execute("UPDATE cart SET quantity = %s WHERE customer_id = %s AND product_id = %s", (new_quantity, user_id, product_id))
+                    cursor.execute("UPDATE cart SET quantity = %s WHERE customer_id = %s AND product_id = %s", (new_quantity, customer_id[0], product_id))
                 else:
                     # If the product is not in the cart, insert a new cart item
-                    cursor.execute("INSERT INTO cart (customer_id, product_id, quantity) VALUES (%s, %s, 1)", (user_id, product_id))
+                    cursor.execute("INSERT INTO cart (customer_id, product_id, quantity) VALUES (%s, %s, 1)", (customer_id[0], product_id))
 
                 # Commit the changes to the database
                 db.commit()
@@ -520,66 +526,50 @@ def view_transaction():
 ###############################################################################
 
 @app.route('/purchase_report', methods=['GET'])
-def purchase_report():  
-        # Execute the SQL query
-        cursor.execute(""" SELECT
-    user.name AS customer_name,
-    transaction.transaction_id,
-    customer.shipping_address,
-    farmer.farm_name,
-    product.name AS product_name,
-    transaction.total_amount,
-    transaction.date,
-    purchase.quantity
-FROM
-    user
-JOIN
-    customer ON user.user_id = customer.user_id
-JOIN
-    transaction ON customer.customer_id = transaction.customer_id
-LEFT JOIN
-    purchase ON transaction.transaction_id = purchase.transaction_id
-LEFT JOIN
-    product ON purchase.product_id = product.product_id
-LEFT JOIN
-    farmer ON product.farmer_id = farmer.farmer_id
-WHERE
-    transaction.date BETWEEN '2023-01-01' AND '2023-11-10';
-                 
-        """)
+def purchase_report():
+    # Get the sorting preference from the form
+    sort_date = request.args.get('sort_date', 'asc')
 
-        # Fetch all the results
-        results = cursor.fetchall()
-        print(results)
-        # Render the template with the results
-        return render_template('purchase_report.html', results=results)
+    # Modify the SQL query to include sorting
+    cursor.execute("""
+        SELECT
+            user.name AS customer_name,
+            transaction.transaction_id,
+            customer.shipping_address,
+            farmer.farm_name,
+            product.name AS product_name,
+            transaction.total_amount,
+            transaction.date,
+            purchase.quantity
+        FROM
+            user
+        JOIN
+            customer ON user.user_id = customer.user_id
+        JOIN
+            transaction ON customer.customer_id = transaction.customer_id
+        LEFT JOIN
+            purchase ON transaction.transaction_id = purchase.transaction_id
+        LEFT JOIN
+            product ON purchase.product_id = product.product_id
+        LEFT JOIN
+            farmer ON product.farmer_id = farmer.farmer_id
+           WHERE
+        transaction.date BETWEEN '2023-01-01' AND '2024-11-10'
+    ORDER BY
+        transaction.date """ + ("ASC" if sort_date == "asc" else "DESC") + 
+    """
+""")
+
+    # Fetch all the results
+    results = cursor.fetchall()
+
+    # Render the template with the results and sorting preference
+    return render_template('purchase_report.html', results=results, sort_date=sort_date)
     
 #####################################################################################################
 
-"""
-@app.route('/product_details/<int:product_id>')
-def product_details(product_id):
-    # Retrieve product information
-    cursor.execute("SELECT * FROM product WHERE product_id = %s", (product_id,))
-    product = cursor.fetchone()
-
-    if not product:
-        return "Product not found"
-
-    # Retrieve comments for the product
-    cursor.execute("SELECT c.comment, u.username FROM review c, user u WHERE c.customer_id = u.user_id AND c.product_id = %s", (product_id,))
-    comments = cursor.fetchall()
-
-    # Check if the user is logged in
-    user_id = session.get('user_id')
-
-    return render_template('product_details.html', product=product, comments=comments, user_id=user_id)
 
 
-
-
-"""
-#################################################################################################################################################
 
 # Logout
 @app.route('/logout')
